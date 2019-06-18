@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+
+    <include resource="logback/json-appender.xml" />
+
+    <!-- Default output -->
+    <springProfile name="!alpha &amp; !beta &amp; !production">
+        <root level="DEBUG">
+            <appender-ref ref="JSON_FILE" />
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
+    <!-- Staging output -->
+    <springProfile name="alpha | beta">
+        <root level="DEBUG">
+            <appender-ref ref="JSON_FILE" />
+        </root>
+    </springProfile>
+
+    <!-- Production output -->
+    <springProfile name="production">
+        <root level="INFO">
+            <appender-ref ref="JSON_FILE" />
+        </root>
+    </springProfile>
+</configuration>

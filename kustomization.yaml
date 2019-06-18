@@ -1,0 +1,10 @@
+resources:
+- fluentd-daemonset.yaml
+- log-demo-deployment.yaml
+configMapGenerator:
+- name: fluent-conf
+  namespace: kube-system
+  files:
+  - conf/fluent.conf
+  - conf/kubernetes.conf
+  - conf/app.conf

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-demo
+spec:
+  selector:
+    matchLabels:
+      app: log-demo
+  template:
+    metadata:
+      labels:
+        app: log-demo
+    spec:
+      containers:
+      - name: log-demo
+        image: log-demo
+        imagePullPolicy: Never
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          # 本来ならここは configmap になりそう
+          value: alpha
+        - name: CONTAINER_NAME
+          value: log-demo
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NAMESPACE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: LOGGING_FILE
+          # conf/app.conf の tag_to_kubernetes_name_regexp で解釈できるように合わせる
+          value: /var/log/app/$(POD_NAME)_$(NAMESPACE_NAME)_$(CONTAINER_NAME)_app.log
+
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
