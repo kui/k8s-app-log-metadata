@@ -114,3 +114,11 @@ app-log-record-example.json (今回やりたかったこと、fluentd-kubernetes
 JSON とそうじゃないものが混ざるので、 fluentd の設定で JSON としてパースしてしまうとエラーハンドリングが必要になる
 
 fluentd でのエラーハンドリングで複雑になる覚悟があるならこれでいいかも。
+
+
+kubernes 公式のアプローチ
+--------------------------
+
+* https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/fluentd-elasticsearch
+
+向き先は es だけどだいぶ参考になる。detect_exception や multi_parser といったプラグインを使って、切り刻まれたスタックトレースをくっつけたり、JSONが出力されたときだけ JSON パースするようにしている
